@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+        }
+        .circle-square{
+            border-radius: 100px;
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            bottom: 20px;
+            left: calc(50vw - 50px);
+
+        }
+        .div1{
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: blue;
+
+        }
+        .div1 p{
+            font-size: 40px;
+            color: #fff;
+        }
+        .div2{
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: green;
+            display: none;
+
+        }
+        .div2 p{
+            font-size: 40px;
+            color: #fff;
+        }
+        .circle-expand{
+            animation: circle-expand 2s 1;
+            /* background: blue; */
+        }
+        @keyframes circle-expand{
+            0% {
+                /* transform: scale(1); */
+                width:70px;
+                height:70px;
+                border-radius: 100vw;
+                transform: translate(0,0);
+                opacity: 1;
+            }
+            50%{
+                
+                
+                
+                opacity: 0.6;
+            
+            }
+            100%{
+                /* transform: scale(10); */
+                width: 150vw;
+                height:150vw;
+                transform: translate(-70vw,50vw);
+                border-radius:150vw; 
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="div1">
+        <p>Div 1</p>
+    </div>
+    <div class="div2">
+            <p>Div 2</p>
+        </div>
+    <div class="circle-square"></div>
+
+</body>
+
+<script>
+    document.querySelector(".div2").style.display="none";
+    document.querySelector(".circle-square").addEventListener("click",function(){
+        
+        if(document.querySelector(".circle-square").className.indexOf("circle-expand")!= -1){
+            document.querySelector(".circle-square").className="circle-square xsxs";
+            // alert('yes');
+
+        }
+        setTimeout(function(){
+            document.querySelector(".circle-square").className+=" circle-expand";
+            
+        },0);
+        setTimeout(function(){
+            
+            if(document.querySelector(".div2").style.display=="none"){
+
+                document.querySelector(".div1").style.display="none";
+                document.querySelector(".div2").style.display="block";
+            }else{
+                document.querySelector(".div2").style.display="none";
+                document.querySelector(".div1").style.display="block";
+            }
+            
+            
+        },1000)
+        
+    })
+
+
+</script>
+</html>
