@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            margin:0px;
+            padding: 0px;
+            font-family: Helvetica;
+        }
+        .div{
+            width: 200px;
+            height: 200px;
+            background: #63c363;
+            margin: 0px 10px;
+            transition: all 1s;
+            
+        }
+        .parent,.drop-con{
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 10vh;
+            transition: all 1s ;
+        }
+        .drop-con{
+            margin-top:30vh;
+           
+        }
+        .drop{
+            border: 1px solid #63c363;
+            width: 200px;
+            height: 200px;
+        }
+    /* .div2{
+        left:250px;
+    }
+    .div3{
+        left: 500px;
+    }
+    .div4{
+        left:750px;
+    } */
+    /* .div1{
+        left:100px;
+    } */
+    .div1showIn{
+        animation: showIn 1.3s ease-in-out;
+    }
+    .div2showIn{
+        animation: showIn 1.9s ease-in-out;
+    }
+    .div3showIn{
+        animation: showIn 1s ease-in-out;
+    }
+    .div4showIn{
+        animation: showIn 1.6s ease-in-out;
+    }
+    .message{
+        text-align: center;
+        position: fixed;
+        top: 10px;
+        left: calc(50% - 50px);
+        color: #fff;
+        background: #ff8585;
+        width: 100px;
+        padding: 10px 20px;
+        opacity: 0;
+        transition: 1s opacity; 
+
+    }
+    @keyframes showIn{
+        0%{
+            transform: translateY(100px);
+            opacity: 0;
+        }
+        100%{
+            transform: translateY(0px);
+            opacity: 1;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="parent">
+            <div id="div3" draggable="true" ondragstart="dragstart_handler(event);" class="div div3">3</div>
+        
+            <div id="div1" draggable="true" ondragstart="dragstart_handler(event);" class="div div1">1</div>
+            <div id="div4" draggable="true" ondragstart="dragstart_handler(event);" class ="div div4">4</div>
+           
+            <div id="div2" draggable="true" ondragstart="dragstart_handler(event);" class="div div2">2</div>
+   
+        </div>
+    <div class="drop-con">
+        <div id="drop1" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class="drop"></div>
+        <div id="drop2" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class="drop"></div>
+        <div id="drop3" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class="drop"></div>
+        <div id="drop4" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class="drop"></div>
+    </div>
+    <div class="message">
+        Wrong Box
+    </div>
+    
+</body>
+<script>
+  
+    function $(x){
+        return document.querySelector(x);
+    }
+    window.requestAnimationFrame(showIn);
+    function showIn(){
+        $(".div1").className+=" div1showIn";
+        $(".div2").className+=" div2showIn";
+        $(".div3").className+=" div3showIn";
+        $(".div4").className+=" div4showIn";
+        
+       
+    }
+   
+    function dragstart_handler(ev){
+        ev.dataTransfer.setData("text/plain", ev.target.id);
+        ev.dataTransfer.dropEffect = "move";
+    }
+    function dragover_handler(ev) {
+        ev.preventDefault();
+        // Set the dropEffect to move
+        ev.dataTransfer.dropEffect = "move"
+    }
+    function drop_handler(ev) {
+        
+        ev.preventDefault();
+        // Get the id of the target and add the moved element to the target's DOM
+        var data = ev.dataTransfer.getData("text");
+       
+        if(data.split("div")[1]==ev.target.id.split("drop")[1]){
+            $("#"+data).className="div "+data;
+            $("#"+data).style.margin="0px";
+            ev.target.appendChild(document.getElementById(data));
+        }
+        else{
+            
+            $(".message").style.opacity="1";
+        }
+        setTimeout(function(){
+            $(".message").style.opacity="0";
+        },1500);
+        
+    }
+</script>
+
+</html>
