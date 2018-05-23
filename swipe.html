@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+<style>
+#modalContent{
+    position: absolute;
+    top:0px;
+    left:0px;
+    width: 100vw;
+    height: 100vh;
+}
+body{
+    padding: 0px;
+    margin: 0px;
+    background: #333;
+}
+.card{
+    width: 80%;
+    height: 40vh;
+    background: #fff;
+    border-radius: 20px;
+    position: absolute;
+    z-index: 11;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    transition: all 1s;
+}
+#card-con{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}
+/* .card2{
+    width: 70%;
+    transform: translateY(-30px);
+  
+    z-index: 10;
+    opacity: 0.8;
+} */
+.swipe-left{
+    animation: swipe-left 0.5s ease-in;
+}
+@keyframes swipe-left{
+    0%{
+        opacity: 1;
+        transform: translate(0,0) rotate(0);
+    }
+    100%{
+        opacity: 0;
+        transform: translate(-100vw,0) rotate(-30deg);
+    }
+}
+.swipe-right{
+    animation: swipe-right 0.5s ease-in;
+}
+@keyframes swipe-right{
+    0%{
+        opacity: 1;
+        transform: translate(0,0) rotate(0);
+    }
+    100%{
+        opacity: 0;
+        transform: translate(100vw,0) rotate(30deg);
+    }
+}
+.swipe-top{
+    animation: swipe-top 0.5s ease-in;
+}
+@keyframes swipe-top{
+    0%{
+        opacity: 1;
+        transform: translate(0,0) rotate(0);
+    }
+    100%{
+        opacity: 0;
+        transform: translate(0,-100vw) rotate(0);
+    }
+}
+.swipe-bottom{
+    animation: swipe-bottom 0.5s ease-in;
+}
+@keyframes swipe-bottom{
+    0%{
+        opacity: 1;
+        transform: translate(0,0) rotate(0);
+    }
+    100%{
+        opacity: 0;
+        transform: translate(0,100vw) rotate(0);
+    }
+}
+</style>
+</head>
+
+<body>
+    <div id="card-con"></div>
+</body>
+<script>
+var width = 80;
+var opacity = 1;
+var centerValue = 0;
+function $(ele){
+    return document.querySelector(ele);
+}
+for(i=0;i < 5; i++){
+    var div = document.createElement("div");
+    div.setAttribute("class","card card"+(0+i));
+    div.setAttribute("style","opacity:"+opacity+";width:"+width+"vw;z-index:"+width+";transform:translateY("+centerValue+"px);");
+    $("#card-con").append(div);
+    // div.onclick=removeCard;
+    opacity = opacity - 0.1;
+    width = width-5;
+    centerValue = centerValue - 20;
+}
+
+function removeCard(event,direction){
+    // event.target.style.display ="none";
+    event.target.className+=" swipe-"+direction;
+    // document.getElementById('card-con').className+=" swipe-"+direction;
+    setTimeout(function(){
+        document.getElementById('card-con').removeChild(event.target);
+        var centerValue = 0;
+        var width = 80;
+        var opacity = 1;
+        var nodes = document.getElementById('card-con').childNodes;
+        console.log(nodes);
+        for(var i=0; i<nodes.length; i++) {
+            
+            if (nodes[i].nodeName.toLowerCase() == 'div') {
+                nodes[i].style.width=width+"vw";
+                nodes[i].style.opacity=opacity;
+                nodes[i].style.zIndex=width;
+                nodes[i].style.transform="translateY("+centerValue+"px)";
+                
+                opacity = opacity - 0.1;
+                width = width-5;
+                centerValue = centerValue - 20;
+            }
+        }
+    },400)
+    
+   
+}
+
+let pageWidth = window.innerWidth || document.body.clientWidth;
+let treshold = Math.max(1,Math.floor(0.01 * (pageWidth)));
+let touchstartX = 0;
+let touchstartY = 0;
+let touchendX = 0;
+let touchendY = 0;
+
+const limit = Math.tan(45 * 1.5 / 180 * Math.PI);
+const gestureZone = document.getElementsByClassName('card');
+
+for(var i = 0 ; i < gestureZone.length; i++){
+    gestureZone[i].addEventListener('touchstart', function(event) {
+        touchstartX = event.changedTouches[0].screenX;
+        touchstartY = event.changedTouches[0].screenY;
+    }, false);
+
+    gestureZone[i].addEventListener('touchend', function(event) {
+        touchendX = event.changedTouches[0].screenX;
+        touchendY = event.changedTouches[0].screenY;
+        handleGesture(event);
+    }, false);
+}
+
+
+function handleGesture(e) {
+    var direction ="left";
+    let x = touchendX - touchstartX;
+    let y = touchendY - touchstartY;
+    let xy = Math.abs(x / y);
+    let yx = Math.abs(y / x);
+    if (Math.abs(x) > treshold || Math.abs(y) > treshold) {
+        if (yx <= limit) {
+            if (x < 0) {
+                console.log("left");
+                direction="left";
+                removeCard(e,direction);
+            } else {
+                console.log("right");
+                direction="right";
+                removeCard(e,direction);
+            }
+        }
+        if (xy <= limit) {
+            if (y < 0) {
+                console.log("top");
+                direction="top";
+                
+                removeCard(e,direction);
+            } else {
+                console.log("bottom");
+                direction="bottom";
+                removeCard(e,direction);
+            }
+        }
+    } else {
+        console.log("tap");
+    }
+}
+</script>
+</html>
